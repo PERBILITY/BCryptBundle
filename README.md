@@ -23,7 +23,7 @@ Configuration
 
 The BCryptBundle requires the presence of a "global_salt". This can be done in the app's configuration, e.g. config.yml:
 
-```` yml
+``` yml
 perbility_bcrypt:
   global_salt: please-change-me-to-something-secret
   iterations: 12
@@ -31,6 +31,18 @@ perbility_bcrypt:
 
 Additionally you can set the number of a bcrypt-iterations (default is 12)
 
+Update your AppKernel.php file, and register the new bundle:
+
+``` php
+
+// in AppKernel::registerBundles()
+$bundles = array(
+    // ...
+    new Perbility\Bundle\BCryptBundle\PerbilityBCryptBundle()
+    // ...
+);
+
+```
 
 
 Usage
