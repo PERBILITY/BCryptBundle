@@ -1,0 +1,25 @@
+{
+    "name": "perbility/bcrypt-bundle",
+    "type": "symfony-bundle",
+    "description": "This bundle provides an easy way to create and work with BCrypt-hashes in a Symfony2-context",
+    "keywords": ["crypt", "bcrypt", "hash", "password"],
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "Benjamin Zikarsky",
+            "email": "benjamin.zikarsky@perbility.de"
+        }
+    ],
+    "require": {
+        "symfony/framework-bundle": "2.1.*",
+        "symfony/console": "*",
+        "php": ">=5.3"
+    },
+    "autoload": {
+        "psr-0": {
+            "Perbility\\Bundle\\BCryptBundle": ""
+        }
+    },
+    "target-dir": "Perbility/Bundle/BCryptBundle"
+}

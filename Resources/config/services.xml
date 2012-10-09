@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="perbility_bcrypt.bcrypt_class">Perbility\Bundle\BCryptBundle\BCrypt\BCrypt</parameter>
+        <parameter key="perbility_bcrypt.iterations" />
+        <parameter key="perbility_bcrypt.global_salt" />
+    </parameters>
+
+    <services>
+        <service id="perbility_bcrypt" class="%perbility_bcrypt.bcrypt_class%">
+            <argument>%perbility_bcrypt.global_salt%</argument>
+            <argument>%perbility_bcrypt.iterations%</argument>
+        </service>
+    </services>
+
+</container>
