@@ -31,11 +31,11 @@ class HashCommand extends AbstractCommand
             ->setName('bcrypt:hash')
             ->setDescription('Hashes a given string')
             ->setHelp("The <info>bcrypt:hash</info> hashes the given string. You can override parameters like iteration-count and the global salt")
-            ->addOption("value", null, InputOption::VALUE_OPTIONAL, "The value to be hashed. If ommitted you will be prompted interactively", null)
-            ->addOption("iterations", "i", InputOption::VALUE_OPTIONAL, "Number of becrypt iterations. Defaults to application-config", null)
+            ->addOption("value",       null, InputOption::VALUE_OPTIONAL, "The value to be hashed. If ommitted you will be prompted interactively", null)
+            ->addOption("iterations",  "i",  InputOption::VALUE_OPTIONAL, "Number of becrypt iterations. Defaults to application-config", null)
             ->addOption("global-salt", "gs", InputOption::VALUE_OPTIONAL, "The global salt to be used. Defaults to application-config", null)
-            ->addOption("userdata", null, InputOption::VALUE_OPTIONAL, "Additional user-data to be added into the hash", "")
-            ->addoption("silent", null, InputOption::VALUE_NONE, "Only returns the actual result without any additional output");
+            ->addOption("userdata",    null, InputOption::VALUE_OPTIONAL, "Additional user-data to be added into the hash", "")
+            ->addoption("silent",      null, InputOption::VALUE_NONE,     "Only returns the actual result without any additional output");
     }
 
     /**
@@ -44,7 +44,7 @@ class HashCommand extends AbstractCommand
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $bcrypt = $this->getContainer()->get('perbility_bcrypt');
-        $it = $input->getOption("iterations") ?: $bcrypt->getIterations();
+        $iterations = $input->getOption("iterations") ?: $bcrypt->getIterations();
         $salt = $input->getOption("global-salt");
         $userData = $input->getOption("userdata");
         $value = $input->getOption("value");
@@ -55,16 +55,16 @@ class HashCommand extends AbstractCommand
         }
 
         $start = microtime(true);
-        $result = $bcrypt->hash($value, $userData, $it, $salt);
+        $result = $bcrypt->hash($value, $userData, $iterations, $salt);
         $time = microtime(true) - $start;
 
-        if ($input->getOption("silent")) {
+        if ($silent) {
             $output->writeln($result);
             return;
         }
 
         $output->writeln(sprintf("<info>Result:</info>     %s", $result));
-        $output->writeln(sprintf("<info>Iterations:</info> %d", $it));
+        $output->writeln(sprintf("<info>Iterations:</info> %d", $iterations));
         $output->writeln(sprintf("<info>Comp.-Time:</info> %ss", number_format($time, 3)));
     }
 }
