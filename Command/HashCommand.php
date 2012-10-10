@@ -18,6 +18,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * This command hashes a given value with the configured bcrypt configuration
  *
+ * @codeCoverageIgnore
  * @author Benjamin Zikarsky <benjamin.zikarsky@perbility.de>
  */
 class HashCommand extends AbstractCommand

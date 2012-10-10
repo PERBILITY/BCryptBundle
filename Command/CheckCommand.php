@@ -18,6 +18,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * This command checks a given hash and value for equality
  *
+ * @codeCoverageIgnore
  * @author Benjamin Zikarsky <benjamin.zikarsky@perbility.de>
  */
 class CheckCommand extends AbstractCommand

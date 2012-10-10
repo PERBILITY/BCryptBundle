@@ -16,7 +16,8 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 /**
  * Abstract class for internal usage which provides some non-standard
  * interaction functionalities
- *
+ * 
+ * @codeCoverageIgnore
  * @author Benjamin Zikarsky <benjamin.zikarsky@perbility.de>
  */
 abstract class AbstractCommand extends ContainerAwareCommand
