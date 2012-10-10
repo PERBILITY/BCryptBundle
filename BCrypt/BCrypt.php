@@ -16,7 +16,7 @@ namespace Perbility\Bundle\BCryptBundle\BCrypt;
  *
  * @author Benjamin Zikarsky <benjamin.zikarsky@perbility.de>
  */
-class Bcrypt
+class BCrypt
 {
     /**
      * aAgorithm-identifier for PHP's crypt-function for PHP versions after 5.3.6
@@ -168,7 +168,7 @@ class Bcrypt
     public function checkHash($hash, $password, $userData='', $globalSalt=null)
     {
         if (is_null($globalSalt)) {
-            $globalSalt=  $this->globalSalt;
+            $globalSalt = $this->globalSalt;
         }
 
         $checkHash = crypt(
