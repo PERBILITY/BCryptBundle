@@ -26,11 +26,17 @@ class BCryptTest extends \PHPUnit_Framework_TestCase
      */
     protected $bcrypt = null;
     
+    /**
+     * {@inheritDoc}
+     */
     public function setUp()
     {
         $this->bcrypt = new BCrypt("global_salt");
     }
     
+    /**
+     * {@inheritDoc}
+     */
     public function tearDown()
     {
         $this->bcrypt = null;
@@ -223,7 +229,7 @@ class BCryptTest extends \PHPUnit_Framework_TestCase
         	array(""),
             array(new \stdclass),
             array(array()),      
-            array("0*"),
+            array("*0"),
             array("abcdefgh")
 		);
     }
