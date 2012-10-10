@@ -218,7 +218,7 @@ class BCrypt
             // pad password with scrambled (hashed) parts of userdata
             str_pad($password, strlen($password) * 4, sha1($userData), STR_PAD_BOTH),
             $globalSalt,
-            true
+            false
         );
     }
 
