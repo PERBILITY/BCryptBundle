@@ -51,7 +51,17 @@ class BCrypt
     /**
      * Length of the crypt()-definition-strength (Format $__$__$)
      */
-    const DEFINITION_LENGTH = 7; //
+    const DEFINITION_LENGTH = 7; 
+    
+    /**
+     * Length of a full hash
+     */
+    const HASH_LENGTH = 60;
+    
+    /**
+     * Regular expression which matches the hash's definition part
+     */
+    const DEFINITION_REGEX = '/\\$([a-z0-9]{2})\\$(\\d{2})\\$/';
 
     /**
      * Number of bcrypt iterations
@@ -169,6 +179,17 @@ class BCrypt
     {
         if (is_null($globalSalt)) {
             $globalSalt = $this->globalSalt;
+        }
+        
+        if (!is_scalar($hash)) {
+            throw new \InvalidArgumentException('$hash is expected to be a string');
+        }
+        
+        $hash = (string) $hash;
+        $definition = substr($hash, 0, self::DEFINITION_LENGTH);
+        
+        if (strlen($hash) != BCrypt::HASH_LENGTH || !preg_match(self::DEFINITION_REGEX, $definition)) {
+            throw new \InvalidArgumentException('$hash is not a valid bcrypt-hash');
         }
 
         $checkHash = crypt(
