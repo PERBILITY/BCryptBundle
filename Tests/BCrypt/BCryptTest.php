@@ -60,7 +60,6 @@ class BCryptTest extends \PHPUnit_Framework_TestCase
 	    $this->assertEquals(BCrypt::MAX_COST_FACTOR, $this->bcrypt->getCostFactor());  
 	}
 	
-	
 	/**
 	 * Tests that an exception is thrown in case cost-factor is lower than MIN_COST_FACTOR
 	 * 

@@ -39,6 +39,8 @@ class PerbilityBCryptExtension extends Extension
 
     /**
      * {@inheritDoc}
+     * 
+     * @codeCoverageIgnore
      */
     public function getAlias()
     {

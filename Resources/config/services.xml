@@ -5,16 +5,19 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="perbility_bcrypt.bcrypt_class">Perbility\Bundle\BCryptBundle\BCrypt\BCrypt</parameter>
+        <parameter key="perbility_bcrypt.class">Perbility\Bundle\BCryptBundle\BCrypt\BCrypt</parameter>
         <parameter key="perbility_bcrypt.cost_factor" />
         <parameter key="perbility_bcrypt.global_salt" />
+        <parameter key="security.encoder.bcrypt.class">Perbility\Bundle\BCryptBundle\Security\Encoder\BCryptEncoder</parameter>
     </parameters>
 
     <services>
-        <service id="perbility_bcrypt" class="%perbility_bcrypt.bcrypt_class%">
+        <service id="perbility_bcrypt" class="%perbility_bcrypt.class%">
             <argument>%perbility_bcrypt.global_salt%</argument>
             <argument>%perbility_bcrypt.cost_factor%</argument>
         </service>
+        <service id="security.encoder.bcrypt" class="%security.encoder.bcrypt.class%">
+            <argument type="service" id="perbility_bcrypt"></argument>
+        </service>
     </services>
-
 </container>
