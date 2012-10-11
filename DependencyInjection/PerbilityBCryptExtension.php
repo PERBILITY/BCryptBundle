@@ -11,6 +11,7 @@
 
 namespace Perbility\Bundle\BCryptBundle\DependencyInjection;
 
+use Perbility\Bundle\BCryptBundle\BCrypt\BCrypt;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -32,7 +33,7 @@ class PerbilityBCryptExtension extends Extension
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
 
-        $container->setParameter('perbility_bcrypt.iterations', $config['iterations']);
+        $container->setParameter('perbility_bcrypt.cost_factor', $this->getCostFactor($config));
         $container->setParameter('perbility_bcrypt.global_salt', $config['global_salt']);
     }
 
@@ -42,5 +43,26 @@ class PerbilityBCryptExtension extends Extension
     public function getAlias()
     {
         return "perbility_bcrypt";
+    }
+    
+    /**
+     * Gets the correct cost-factor from config while also checking the deprecated
+     * old "iterations" key
+     * 
+     * @param array $config
+     * @return int
+     */
+    private function getCostFactor($config) 
+    {
+        if ($config['iterations'] < 0) {
+           return $config['cost_factor'];
+        }
+        
+        if ($config['cost_factor'] != BCrypt::DEFAULT_COST_FACTOR) {
+            throw new \LogicException("There is a config value for both the deprecated perbility_bcrypt.iterations and the semantically identical perbility_bcrypt.cost_factor");
+        }
+        
+        // @TODO Log deprecated warning?
+        return $config['iterations'];
     }
 }

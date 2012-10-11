@@ -6,14 +6,14 @@
 
     <parameters>
         <parameter key="perbility_bcrypt.bcrypt_class">Perbility\Bundle\BCryptBundle\BCrypt\BCrypt</parameter>
-        <parameter key="perbility_bcrypt.iterations" />
+        <parameter key="perbility_bcrypt.cost_factor" />
         <parameter key="perbility_bcrypt.global_salt" />
     </parameters>
 
     <services>
         <service id="perbility_bcrypt" class="%perbility_bcrypt.bcrypt_class%">
             <argument>%perbility_bcrypt.global_salt%</argument>
-            <argument>%perbility_bcrypt.iterations%</argument>
+            <argument>%perbility_bcrypt.cost_factor%</argument>
         </service>
     </services>
 

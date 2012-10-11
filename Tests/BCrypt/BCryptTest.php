@@ -43,62 +43,64 @@ class BCryptTest extends \PHPUnit_Framework_TestCase
     }
     
     /**
-     * Tests that all valid values for "iterations" can be set and read accordingly
+     * Tests that all valid values for cost-factor can be set and read accordingly
      */
-	public function testValidIterations()
+	public function testValidCostFactor()
 	{
-	    $this->assertEquals(BCrypt::DEFAULT_ITERATIONS, $this->bcrypt->getIterations());
+	    $this->assertEquals(BCrypt::DEFAULT_COST_FACTOR, $this->bcrypt->getCostFactor());
 	    
-	    $this->bcrypt->setIterations(BCrypt::MIN_ITERATIONS);
-	    $this->assertEquals(BCrypt::MIN_ITERATIONS, $this->bcrypt->getIterations());
+	    $this->bcrypt->setCostFactor(BCrypt::MIN_COST_FACTOR);
+	    $this->assertEquals(BCrypt::MIN_COST_FACTOR, $this->bcrypt->getCostFactor());
 	    
-	    $value = intval((BCrypt::MIN_ITERATIONS + BCrypt::MAX_ITERATIONS) / 2);
-	    $this->bcrypt->setIterations($value);
-	    $this->assertEquals($value, $this->bcrypt->getIterations());
+	    $value = intval((BCrypt::MIN_COST_FACTOR + BCrypt::MAX_COST_FACTOR) / 2);
+	    $this->bcrypt->setCostFactor($value);
+	    $this->assertEquals($value, $this->bcrypt->getCostFactor());
 	    
-	    $this->bcrypt->setIterations(BCrypt::MAX_ITERATIONS);
-	    $this->assertEquals(BCrypt::MAX_ITERATIONS, $this->bcrypt->getIterations());  
+	    $this->bcrypt->setCostFactor(BCrypt::MAX_COST_FACTOR);
+	    $this->assertEquals(BCrypt::MAX_COST_FACTOR, $this->bcrypt->getCostFactor());  
 	}
 	
 	
 	/**
-	 * Tests that an exception is thrown in case iterations are lower than MIN_ITERATIONS
+	 * Tests that an exception is thrown in case cost-factor is lower than MIN_COST_FACTOR
 	 * 
 	 * @expectedException \InvalidArgumentException
 	 */
-	public function testInvalidIterationsMin()
+	public function testInvalidCostFactorMin()
 	{
-	    $this->bcrypt->setIterations(BCrypt::MIN_ITERATIONS - 1);
+	    $this->bcrypt->setCostFactor(BCrypt::MIN_COST_FACTOR - 1);
 	}
 	
 	/**
-	 * Tests that an exception is thrown in case iterations are greater than MAX_ITERATIONS
+	 * Tests that an exception is thrown in case cost-factor is greater than MAX_COST_FACTOR
 	 * 
 	 * @expectedException \InvalidArgumentException
 	 */
-	public function testInvalidIterationsMax()
+	public function testInvalidCostFactorMax()
 	{
-	    $this->bcrypt->setIterations(BCrypt::MAX_ITERATIONS + 1);
+	    $this->bcrypt->setCostFactor(BCrypt::MAX_COST_FACTOR + 1);
 	}
 	
 	/**
-	 * Tests that an exception is thrown in case iterations are lower than MIN_ITERATIONS when specified on hash-call
+	 * Tests that an exception is thrown in case cost-factor is lower than MIN_COST_FACTOR 
+	 * when specified on hash()-call
 	 *
 	 * @expectedException \InvalidArgumentException
 	 */
 	public function testInvalidIterationsMinSpecOnRuntime()
 	{
-	    $this->bcrypt->hash("test", null, BCrypt::MIN_ITERATIONS - 1);
+	    $this->bcrypt->hash("test", null, BCrypt::MIN_COST_FACTOR - 1);
 	}
 	
 	/**
-	 * Tests that an exception is thrown in case iterations are greater than MAX_ITERATIONS when specified on hash-call
+	 * Tests that an exception is thrown in case cost-factor is greater than MAX_COST_FACTOR 
+	 * when specified on hash-call
 	 *
 	 * @expectedException \InvalidArgumentException
 	 */
-	public function testInvalidIterationsMaxSpecOnRuntime()
+	public function testInvalidCostFactorMaxSpecOnRuntime()
 	{
-	    $this->bcrypt->hash("test", null, BCrypt::MAX_ITERATIONS + 1);
+	    $this->bcrypt->hash("test", null, BCrypt::MAX_COST_FACTOR + 1);
 	}
 	
 	/**
@@ -106,11 +108,11 @@ class BCryptTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testHashesGlobalSaltDependence()
 	{
-	    $this->bcrypt->setIterations(BCrypt::MIN_ITERATIONS);
+	    $this->bcrypt->setCostFactor(BCrypt::MIN_COST_FACTOR);
 	    $hash = $this->bcrypt->hash("test", "userdata");
 	    
-	    $bcryptA = new BCrypt($this->bcrypt->getGlobalSalt(), $this->bcrypt->getIterations());
-	    $bcryptB = new BCrypt(md5($this->bcrypt->getGlobalSalt()), $this->bcrypt->getIterations());
+	    $bcryptA = new BCrypt($this->bcrypt->getGlobalSalt(), $this->bcrypt->getCostFactor());
+	    $bcryptB = new BCrypt(md5($this->bcrypt->getGlobalSalt()), $this->bcrypt->getCostFactor());
 	    
 	    $this->assertTrue($bcryptA->checkHash($hash, "test", "userdata"));
 	    $this->assertFalse($bcryptB->checkHash($hash, "test", "userdata"));
@@ -124,7 +126,7 @@ class BCryptTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testHashesUserDataDependence()
 	{
-	    $this->bcrypt->setIterations(BCrypt::MIN_ITERATIONS);
+	    $this->bcrypt->setCostFactor(BCrypt::MIN_COST_FACTOR);
 		$hash = $this->bcrypt->hash("test", "userdata");
 	   	
 		$this->assertTrue($this->bcrypt->checkHash($hash, "test", "userdata"));
@@ -136,10 +138,10 @@ class BCryptTest extends \PHPUnit_Framework_TestCase
 	 * 
 	 * @dataProvider validHashUses
 	 */
-	public function testHash($password, $userdata, $iterations, $globalSalt)
+	public function testHash($password, $userdata, $costFactor, $globalSalt)
 	{
-	    $this->bcrypt->setIterations(BCrypt::MIN_ITERATIONS);
-	    $params = self::provideParameterArray($password, $userdata, $iterations, $globalSalt);
+	    $this->bcrypt->setCostFactor(BCrypt::MIN_COST_FACTOR);
+	    $params = self::provideParameterArray($password, $userdata, $costFactor, $globalSalt);
 	    
 	    $hash = call_user_func_array(array($this->bcrypt, "hash"), $params);
 	    
@@ -147,7 +149,7 @@ class BCryptTest extends \PHPUnit_Framework_TestCase
 	    $this->assertEquals(BCrypt::HASH_LENGTH, strlen($hash));
 	    $this->assertEquals(1, preg_match(BCrypt::DEFINITION_REGEX, substr($hash, 0, BCrypt::DEFINITION_LENGTH), $matches));
 	    $this->assertEquals(BCrypt::getAlgorithmId(), $matches[1]);
-	    $this->assertEquals($iterations ?: $this->bcrypt->getIterations(), intval($matches[2]));
+	    $this->assertEquals($costFactor ?: $this->bcrypt->getCostFactor(), intval($matches[2]));
 	}
 	
 	/**
@@ -155,9 +157,9 @@ class BCryptTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @dataProvider validHashUses
 	 */
-	public function testCheckHash($password, $userdata, $i /*ignored */, $globalSalt, $hash)
+	public function testCheckHash($password, $userdata, $c /*ignored */, $globalSalt, $hash)
 	{
-	    $this->bcrypt->setIterations(BCrypt::MIN_ITERATIONS);
+	    $this->bcrypt->setCostFactor(BCrypt::MIN_COST_FACTOR);
 	    $params = self::provideParameterArray($hash, $password, $userdata, $globalSalt);
 	    $this->assertTrue(call_user_func_array(array($this->bcrypt, 'checkHash'), $params));
 	}
@@ -205,10 +207,10 @@ class BCryptTest extends \PHPUnit_Framework_TestCase
             array("test", "userdata", null, null, '$2a$04$ad4b7a3fb025e4ad48670eS8gTCFOaF1RsgQWVKVHi6LIh.1Nt35C'),
             array("test", array("user", "data"), null, null, '$2a$04$80b0665db3ab21554a5a2u271EqKEa7KoxvM53Gz6fJZrLUGKnUhm'),
             array("test", (object) array("user" => "data"), null, null, '$2a$04$86d917f4c0333402346e1uNXjnRiR/oVrWFHptQW1dmAjeCWMHyLG'),
-            array("test", "userdata", BCrypt::MIN_ITERATIONS, null, '$2a$04$933f563f0d6140f48c53aOfWX5BLAofb63zZYJdToE.my.9zCEq.2'),
-            array("test", null, BCrypt::DEFAULT_ITERATIONS, '', '$2a$12$fc1b34e8ef12949b8359de4jTlvkuqDIkpoI9agqlULs3t5MuAs1a'),
+            array("test", "userdata", BCrypt::MIN_COST_FACTOR, null, '$2a$04$933f563f0d6140f48c53aOfWX5BLAofb63zZYJdToE.my.9zCEq.2'),
+            array("test", null, BCrypt::DEFAULT_COST_FACTOR, '', '$2a$12$fc1b34e8ef12949b8359de4jTlvkuqDIkpoI9agqlULs3t5MuAs1a'),
             array("test", null, null, "global-salt", '$2a$04$47f16f9a17cd49e17db30eESOUJT0rEXxUXLGAEAVAfZ1MsizW8Ja'),
-            array("test", "userdata", BCrypt::DEFAULT_ITERATIONS, "global-salt", '$2a$12$f857b9eb207ff3f5deaffuqGKVAbIQ6yN.VllJYCIDISd1u/pNhey'),
+            array("test", "userdata", BCrypt::DEFAULT_COST_FACTOR, "global-salt", '$2a$12$f857b9eb207ff3f5deaffuqGKVAbIQ6yN.VllJYCIDISd1u/pNhey'),
             array("very-long-user-data-1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"
                   . "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"
                   . "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"

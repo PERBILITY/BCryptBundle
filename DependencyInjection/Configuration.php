@@ -30,7 +30,8 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('perbility_bcrypt')
             ->children()
-                ->scalarNode('iterations')->defaultValue(BCrypt::DEFAULT_ITERATIONS)->end()
+                ->scalarNode('cost_factor')->defaultValue(BCrypt::DEFAULT_COST_FACTOR)->end()
+                ->scalarNode('iterations')->defaultValue(-1)->end()
                 ->scalarNode('global_salt')->isRequired()->cannotBeEmpty()->end()
             ->end();
 

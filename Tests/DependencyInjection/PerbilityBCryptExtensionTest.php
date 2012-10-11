@@ -71,15 +71,15 @@ class PerbilityBCryptExtensionTest extends \PHPUnit_Framework_TestCase
     public function testServiceSetup()
     {
         $this->extension->load(
-            array('perbility_bcrypt' => array('global_salt' => 'global_salt', 'iterations' => BCrypt::MIN_ITERATIONS)),
+            array('perbility_bcrypt' => array('global_salt' => 'global_salt', 'cost_factor' => BCrypt::MIN_COST_FACTOR)),
             $this->container
         );
         
         $this->assertNotNull($this->container->get('perbility_bcrypt'));
         $this->assertTrue($this->container->get('perbility_bcrypt') instanceof BCrypt);
         
-        $this->assertEquals(BCrypt::MIN_ITERATIONS, $this->container->getParameter('perbility_bcrypt.iterations'));
-        $this->assertEquals(BCrypt::MIN_ITERATIONS, $this->container->get('perbility_bcrypt')->getIterations());
+        $this->assertEquals(BCrypt::MIN_COST_FACTOR, $this->container->getParameter('perbility_bcrypt.cost_factor'));
+        $this->assertEquals(BCrypt::MIN_COST_FACTOR, $this->container->get('perbility_bcrypt')->getCostFactor());
         
         $this->assertEquals('global_salt', $this->container->getParameter('perbility_bcrypt.global_salt'));
         $this->assertEquals('global_salt', $this->container->get('perbility_bcrypt')->getGlobalSalt());
@@ -93,7 +93,7 @@ class PerbilityBCryptExtensionTest extends \PHPUnit_Framework_TestCase
     public function testInvalidIterations()
     {
         $this->extension->load(
-            array('perbility_bcrypt' => array('global_salt' => 'global_salt', 'iterations' => BCrypt::MIN_ITERATIONS-1)),
+            array('perbility_bcrypt' => array('global_salt' => 'global_salt', 'cost_factor' => BCrypt::MIN_COST_FACTOR-1)),
             $this->container
         );
         

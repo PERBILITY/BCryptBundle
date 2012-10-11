@@ -29,19 +29,19 @@ class BCrypt
     const ALGO_ID_PRE_5_3_7 = "2a";
 
     /**
-     * Maximum number of bcrypt-iterations
+     * Maximum bcrypt cost-factor
      */
-    const MAX_ITERATIONS = 31;
+    const MAX_COST_FACTOR = 31;
 
     /**
-     * Minimum number of bcrypt-iterations
+     * Minimum bcrypt cost-factor
      */
-    const MIN_ITERATIONS = 4;
+    const MIN_COST_FACTOR = 4;
 
     /**
-     * Default number of bcrypt-iterations
+     * Default bcrypt cost-factor
      */
-    const DEFAULT_ITERATIONS = 12;
+    const DEFAULT_COST_FACTOR = 12;
 
     /**
      * Number of bytes for the becrypt-salt
@@ -64,11 +64,11 @@ class BCrypt
     const DEFINITION_REGEX = '/\\$([a-z0-9]{2})\\$(\\d{2})\\$/';
 
     /**
-     * Number of bcrypt iterations
+     * bcrypt cost factor
      *
      * @var int
      */
-    private $iterations;
+    private $costFactor;
 
     /**
      * Global salt to be used in every hash
@@ -81,12 +81,16 @@ class BCrypt
      * Class construtor - sets config options
      *
      * @param string $globalSalt
-     * @param int    $iterations
+     * @param int    $costFactor
      */
-    public function __construct($globalSalt='', $iterations=self::DEFAULT_ITERATIONS)
+    public function __construct($globalSalt='', $costFactor=self::DEFAULT_COST_FACTOR)
     {
-        $this->globalSalt = $globalSalt;
-        $this->setIterations($iterations);
+        if (!is_scalar($globalSalt)) {
+            throw new \InvalidArgumentException("Global salt has to be a string");
+        }
+        
+        $this->globalSalt = (string) $globalSalt;
+        $this->setCostFactor($costFactor);
     }
 
     /**
@@ -102,26 +106,26 @@ class BCrypt
     }
 
     /**
-     * Gets the number of bcrypt-iterations
+     * Gets the bcrypt cost-factor
      *
      * @return int
      */
-    public function getIterations()
+    public function getCostFactor()
     {
-        return $this->iterations;
+        return $this->costFactor;
     }
 
     /**
-     * Sets the number of bcrypt-iterations
+     * Sets the bcrypt cost-factor
      *
-     * @param int $iterations
+     * @param int $costFactor
      */
-    public function setIterations($iterations)
+    public function setCostFactor($costFactor)
     {
-        $iterations = intval($iterations);
-        $this->validateIterations($iterations);
+        $costFactor = intval($costFactor);
+        $this->validateCostFactor($costFactor);
 
-        $this->iterations = $iterations;
+        $this->costFactor = $costFactor;
     }
 
     /**
@@ -137,20 +141,20 @@ class BCrypt
     /**
      * Hashes a given string/password under consideration of $userData
      *
-     * Allows overriding class configuration like iterations and globalSalt
+     * Allows overriding class configuration like cost-factor and globalSalt
      *
      * @param string $password
      * @param mixed  $userData defaults to an empty string
-     * @param int    $iterations defaults to BCrypt::getIterations()
+     * @param int    $costFactor defaults to BCrypt::getCostFactor()
      * @param string $globalSalt defaults to BCrypt::getGlobalSalt()
      */
-    public function hash($password, $userData='', $iterations=null, $globalSalt=null)
+    public function hash($password, $userData='', $costFactor=null, $globalSalt=null)
     {
-        if (is_null($iterations)) {
-            $iterations = $this->iterations;
+        if (is_null($costFactor)) {
+            $costFactor = $this->costFactor;
         } else {
             // check parameter constraints
-            $this->validateIterations($iterations);
+            $this->validateCostFactor($costFactor);
         }
 
         if (is_null($globalSalt)) {
@@ -161,7 +165,7 @@ class BCrypt
         $salt = self::makeSalt(self::SALT_LENGTH);
 
         $saltDefinition = sprintf('$%s$%02d$%s',
-           self::getAlgorithmId(), $iterations, $salt
+           self::getAlgorithmId(), $costFactor, $salt
         );
 
         return crypt($string, $saltDefinition);
@@ -201,18 +205,18 @@ class BCrypt
     }
 
     /**
-     * Validates an integer against the iteration constraints, and throws an exception
+     * Validates an integer against the cost-factor constraints, and throws an exception
      * on violations
      *
-     * @param int $iterations
+     * @param int $costFactor
      */
-    private function validateIterations($iterations)
+    private function validateCostFactor($costFactor)
     {
-        if ($iterations < self::MIN_ITERATIONS || $iterations > self::MAX_ITERATIONS) {
+        if ($costFactor < self::MIN_COST_FACTOR || $costFactor > self::MAX_COST_FACTOR) {
             throw new \InvalidArgumentException(sprintf(
-                "\$iterations must be an int greater than %d and lower than %d",
-                self::MIN_ITERATIONS-1,
-                self::MAX_ITERATIONS+1
+                "\$costFactor must be an int greater than %d and lower than %d",
+                self::MIN_COST_FACTOR-1,
+                self::MAX_COST_FACTOR+1
             ));
         }
     }

@@ -25,14 +25,12 @@ $ composer require perbility/bcrypt-bundle
 Then update your AppKernel.php file, and register the new bundle:
 
 ``` php
-
 // in AppKernel::registerBundles()
 $bundles = array(
     // ...
     new Perbility\Bundle\BCryptBundle\PerbilityBCryptBundle()
     // ...
 );
-
 ```
 
 Finally you have to set up one configuration-parameter (see paragraph below) und you're done.
@@ -48,13 +46,15 @@ perbility_bcrypt:
   global_salt: please-change-me-to-something-secret
 ```
 
-Additionally you can set the number of a bcrypt-iterations (default is 12) with `iterations`. A complete configuration can therefore look like this:
+Additionally you can set the bcrypt cost-factor (default is 12) with `cost_factor`. A complete configuration can therefore look like this:
 
 ``` yml
 perbility_bcrypt:
   global_salt: please-change-me-to-something-secret
-  iterations: 14
+  cost_factor: 14
 ```
+
+In early versions of the bundle `cost_factor` was named `iterations`. The old configuration key is still read (as long as there is no `cost_factor` present), but deprecated.
 
 
 Usage
