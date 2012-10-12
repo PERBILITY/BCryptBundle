@@ -175,6 +175,16 @@ class BCryptTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
+	 * Tests that an invalid salt leads to an exception
+	 * 
+	 * @expectedException \InvalidArgumentException
+	 */
+	public function testInvalidConstructorArgument()
+	{
+	    new BCrypt(array());
+	}
+	
+	/**
 	 * Returns all given arguments as an array with all the trailing null values
 	 * dropped
 	 * 

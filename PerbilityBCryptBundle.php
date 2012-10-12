@@ -16,6 +16,7 @@ use Perbility\Bundle\BCryptBundle\DependencyInjection\PerbilityBCryptExtension;
 
 /**
  * @author Benjamin Zikarsky <benjamin.zikarsky@perbility.de>
+ * @codeCoverageIgnore
  */
 class PerbilityBCryptBundle extends Bundle
 {

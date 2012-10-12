@@ -90,7 +90,7 @@ class PerbilityBCryptExtensionTest extends \PHPUnit_Framework_TestCase
      * 
      * @expectedException \InvalidArgumentException
      */
-    public function testInvalidIterations()
+    public function testInvalidCostFactor()
     {
         $this->extension->load(
             array('perbility_bcrypt' => array('global_salt' => 'global_salt', 'cost_factor' => BCrypt::MIN_COST_FACTOR-1)),
@@ -98,5 +98,39 @@ class PerbilityBCryptExtensionTest extends \PHPUnit_Framework_TestCase
         );
         
         $this->container->get('perbility_bcrypt');
+    }
+    
+    /**
+     * Tests that the deprecated iterations config-entry still works
+     */
+    public function testDeprecatedIterations()
+    {
+        $this->extension->load(
+                array('perbility_bcrypt' => array('global_salt' => 'global_salt', 'iterations' => BCrypt::MIN_COST_FACTOR)),
+                $this->container
+        );
+        
+        $this->assertNotNull($this->container->get('perbility_bcrypt'));
+        $this->assertTrue($this->container->get('perbility_bcrypt') instanceof BCrypt);
+        
+        $this->assertEquals(BCrypt::MIN_COST_FACTOR, $this->container->getParameter('perbility_bcrypt.cost_factor'));
+        $this->assertEquals(BCrypt::MIN_COST_FACTOR, $this->container->get('perbility_bcrypt')->getCostFactor());
+    }
+    
+    /**
+     * Tests that specifying both deprecated `iterations` and valid `cost_factor` leads to an exception
+     * 
+     * @expectedException \LogicException
+     */
+    public function testExceptionOnBothIterationsAndCostFactor()
+    {
+        $this->extension->load(
+                array('perbility_bcrypt' => array(
+                	'global_salt' => 'global_salt', 
+                    'iterations' => BCrypt::MIN_COST_FACTOR, 
+                    'cost_factor' => BCrypt::MIN_COST_FACTOR
+                )),
+                $this->container
+        );
     }
 }
