@@ -33,6 +33,8 @@ abstract class AbstractCommand extends ContainerAwareCommand
         $command = sprintf("read -s -p %s temp_pw", escapeshellarg($prompt)). ' && echo \\$temp_pw';
         $password = trim(shell_exec(sprintf($bash, $command)));
         
+        echo "\n";
+        
         return $password;
     }
 }
