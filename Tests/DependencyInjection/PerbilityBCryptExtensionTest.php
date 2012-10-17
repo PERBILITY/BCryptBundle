@@ -88,7 +88,7 @@ class PerbilityBCryptExtensionTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests that an invalid iterations value leads to an exception
      * 
-     * @expectedException \InvalidArgumentException
+     * @expectedException Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
      */
     public function testInvalidCostFactor()
     {
@@ -96,8 +96,6 @@ class PerbilityBCryptExtensionTest extends \PHPUnit_Framework_TestCase
             array('perbility_bcrypt' => array('global_salt' => 'global_salt', 'cost_factor' => BCrypt::MIN_COST_FACTOR-1)),
             $this->container
         );
-        
-        $this->container->get('perbility_bcrypt');
     }
     
     /**

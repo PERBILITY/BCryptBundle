@@ -64,7 +64,6 @@ class PerbilityBCryptExtension extends Extension
             throw new \LogicException("There is a config value for both the deprecated perbility_bcrypt.iterations and the semantically identical perbility_bcrypt.cost_factor");
         }
         
-        // @TODO Log deprecated warning?
         return $config['iterations'];
     }
 }

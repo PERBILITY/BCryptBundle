@@ -30,8 +30,17 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('perbility_bcrypt')
             ->children()
-                ->scalarNode('cost_factor')->defaultValue(BCrypt::DEFAULT_COST_FACTOR)->end()
-                ->scalarNode('iterations')->defaultValue(-1)->end()
+                ->scalarNode('cost_factor')
+                	->defaultValue(BCrypt::DEFAULT_COST_FACTOR)
+                 	->validate()
+                 		->ifTrue(function($v) {return !BCrypt::isValidCostFactor($v);})
+                 		->then(function($v){ BCrypt::validateCostFactor($v);})
+                 	->end()
+               	->end()
+                ->scalarNode('iterations')
+                	->info('DEPRECATED! Please use: cost_factor instead')
+                	->defaultValue(-1)
+               	->end()
                 ->scalarNode('global_salt')->isRequired()->cannotBeEmpty()->end()
             ->end();
 

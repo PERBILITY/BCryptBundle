@@ -205,23 +205,6 @@ class BCrypt
     }
 
     /**
-     * Validates an integer against the cost-factor constraints, and throws an exception
-     * on violations
-     *
-     * @param int $costFactor
-     */
-    private function validateCostFactor($costFactor)
-    {
-        if ($costFactor < self::MIN_COST_FACTOR || $costFactor > self::MAX_COST_FACTOR) {
-            throw new \InvalidArgumentException(sprintf(
-                "\$costFactor must be an int greater than %d and lower than %d",
-                self::MIN_COST_FACTOR-1,
-                self::MAX_COST_FACTOR+1
-            ));
-        }
-    }
-
-    /**
      * Returns an hashable string for crypt()
      * which considers optional $userData and the global salt
      *
@@ -262,5 +245,33 @@ class BCrypt
         } while (strlen($rand) < $length);
 
         return substr($rand, 0, $length);
+    }
+    
+    /**
+     * Returns whether a costfactor is valid
+     * 
+     * @param int $costFactor
+     * @return boolean
+     */
+    public static function isValidCostFactor($costFactor)
+    {
+        return $costFactor >= self::MIN_COST_FACTOR && $costFactor <= self::MAX_COST_FACTOR;
+    }
+    
+    /**
+     * Validates an integer against the cost-factor constraints, and throws an exception
+     * on violations
+     *
+     * @param int $costFactor
+     */
+    public static function validateCostFactor($costFactor)
+    {
+        if (!self::isValidCostFactor($costFactor)) {
+            throw new \InvalidArgumentException(sprintf(
+                    "\$costFactor must be an int greater than %d and lower than %d",
+                    self::MIN_COST_FACTOR-1,
+                    self::MAX_COST_FACTOR+1
+            ));
+        }
     }
 }
