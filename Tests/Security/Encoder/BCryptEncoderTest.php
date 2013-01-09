@@ -56,28 +56,30 @@ class BCryptEncoderTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertTrue($this->encoder->isPasswordValid(
 			$this->bcrypt->hash("test"), 
-			"test"
+			"test",
+            null
         ));
         
         
         $this->assertFalse($this->encoder->isPasswordValid(
 			$this->bcrypt->hash("test"), 
-			"not-test"
+			"not-test",
+            null
         ));
     }
-    
+
     /**
      * Tests that password encode works as expected
      */
     public function testEncodePassword()
     {
         $this->assertTrue($this->bcrypt->checkHash(
-        	$this->encoder->encodePassword("test"),        
+        	$this->encoder->encodePassword("test", null),
             "test"
 		));
         
         $this->assertFalse($this->bcrypt->checkHash(
-            $this->encoder->encodePassword("test"),
+            $this->encoder->encodePassword("test", null),
             "not-test"
         ));
     }
