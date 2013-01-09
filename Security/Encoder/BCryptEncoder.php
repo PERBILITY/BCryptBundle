@@ -33,7 +33,7 @@ class BCryptEncoder extends BasePasswordEncoder
      * 
      * But salt is ignored and not required
      */
-    public function encodePassword($raw, $salt=null)
+    public function encodePassword($raw, $salt)
     {
         return $this->bcrypt->hash($raw);
     }
@@ -43,7 +43,7 @@ class BCryptEncoder extends BasePasswordEncoder
      * 
      * But salt is ignored and not required
      */
-    public function isPasswordValid($encoded, $raw, $salt=null)
+    public function isPasswordValid($encoded, $raw, $salt)
     {
         return $this->bcrypt->checkHash($encoded, $raw);
     }
