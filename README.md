@@ -60,6 +60,16 @@ The BCrypt can be used either as a service from the service-container or as a co
 ### Service-Container
 The BCrypt-service is registered by default as `perbility_bcrypt`. The service is an instance of `Perbility\Bundle\BCryptBundle\BCrypt\BCrypt` and will behave accordingly.
 
+### Security-Encoder
+There is a special wrapper for the BCrypt service to be used in a Symfony/Component/Security-context. Check the following code-snippet for an example:
+
+    security
+      encoders:
+        Symfony\Component\Security\Core\User\User:
+          id: security.encoder.bcrypt
+          
+          
+
 ### Command-Line
 - `bcrypt:hash` 
 - `bcrypt:check`
