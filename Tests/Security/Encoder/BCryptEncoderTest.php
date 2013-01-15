@@ -22,7 +22,7 @@ use Perbility\Bundle\BCryptBundle\BCrypt\BCrypt;
 class BCryptEncoderTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface
+     * @var Perbility\Bundle\BCryptBundle\Security\Encoder\BCryptEncoder
      */
     private $encoder = null;
     
@@ -47,6 +47,11 @@ class BCryptEncoderTest extends \PHPUnit_Framework_TestCase
     {
         $this->bcrypt = null;
         $this->encoder = null;
+    }
+    
+    public function testType()
+    {
+    	$this->assertTrue($this->encoder instanceof \Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface);
     }
     
     /**
