@@ -98,11 +98,20 @@ class BCrypt
      *
      * @return string
      */
-    public static final function getAlgorithmId($version=PHP_VERSION)
+    public static final function getAlgorithmId($password, $version=PHP_VERSION)
     {
-        return version_compare($version, "5.3.7", ">=")
-            ? self::ALGO_ID
-            : self::ALGO_ID_PRE_5_3_7;
+        if (version_compare($version, "5.3.7", ">=")){
+            return self::ALGO_ID;
+        } else {
+            if (preg_match('/[\x80-\xFF]/', $password)) {
+                throw new \RuntimeException(
+                    'The bcrypt implementation used by PHP can contains a security flaw ' .
+                    'using password with 8-bit character. ' .
+                    'We suggest to upgrade to PHP 5.3.7+ or use passwords with only 7-bit characters'
+                );
+            }
+            return self::ALGO_ID_5_3_7;
+        }
     }
 
     /**
@@ -165,7 +174,7 @@ class BCrypt
         $salt = self::makeSalt(self::SALT_LENGTH);
 
         $saltDefinition = sprintf('$%s$%02d$%s',
-           self::getAlgorithmId(), $costFactor, $salt
+           self::getAlgorithmId($password), $costFactor, $salt
         );
 
         return crypt($string, $saltDefinition);
