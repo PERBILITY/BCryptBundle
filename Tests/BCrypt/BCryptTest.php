@@ -147,7 +147,7 @@ class BCryptTest extends \PHPUnit_Framework_TestCase
 	    $this->assertTrue(is_string($hash));
 	    $this->assertEquals(BCrypt::HASH_LENGTH, strlen($hash));
 	    $this->assertEquals(1, preg_match(BCrypt::DEFINITION_REGEX, substr($hash, 0, BCrypt::DEFINITION_LENGTH), $matches));
-	    $this->assertEquals(BCrypt::getAlgorithmId($password), $matches[1]);
+	    $this->assertEquals(BCrypt::getAlgorithmId(), $matches[1]);
 	    $this->assertEquals($costFactor ?: $this->bcrypt->getCostFactor(), intval($matches[2]));
 	}
 	
