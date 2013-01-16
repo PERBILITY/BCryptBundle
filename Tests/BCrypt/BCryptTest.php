@@ -126,10 +126,20 @@ class BCryptTest extends \PHPUnit_Framework_TestCase
 	public function testHashesUserDataDependence()
 	{
 	    $this->bcrypt->setCostFactor(BCrypt::MIN_COST_FACTOR);
-		$hash = $this->bcrypt->hash("test", "userdata");
+	    $hash = $this->bcrypt->hash("test", "userdata");
 	   	
-		$this->assertTrue($this->bcrypt->checkHash($hash, "test", "userdata"));
-		$this->assertFalse($this->bcrypt->checkHash($hash, "test", "different-userdata"));
+	    $this->assertTrue($this->bcrypt->checkHash($hash, "test", "userdata"));
+	    $this->assertFalse($this->bcrypt->checkHash($hash, "test", "different-userdata"));
+	}
+	
+	/**
+	 * Tests that an exception is thrown in case we have 8-bit password char and PHP version < 5.3.7
+	 * 
+	 * @expectedException \RuntimeException
+	 */
+	public function testCheckAlgorithmConstraintsNonAsciiPassword()
+	{
+	    BCrypt::checkAlgorithmConstraints(BCrypt::ALGO_ID_PRE_5_3_7, "paссword");
 	}
 	
 	/**
