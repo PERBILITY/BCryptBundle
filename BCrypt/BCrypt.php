@@ -104,6 +104,24 @@ class BCrypt
             ? self::ALGO_ID
             : self::ALGO_ID_PRE_5_3_7;
     }
+     
+    /**
+     * Checks for possible constraints of the given algorithm
+     *
+     * @param string $algoId
+     * @param string $password
+     * @throws \RuntimeException if using 8-bit password with PHP version <= 5.3.7
+     */
+    public static function checkAlgorithmConstraints($algoId, $password)
+    {
+        if (self::ALGO_ID_PRE_5_3_7 === $algoId && preg_match('/[\x80-\xFF]/', $password)) {
+            throw new \RuntimeException(
+                'The bcrypt implementation used by PHP can contains a security flaw ' .
+                'using password with 8-bit character. ' .
+                'We suggest to upgrade to PHP 5.3.7+ or use passwords with only 7-bit characters'
+            );
+        }
+    }
 
     /**
      * Gets the bcrypt cost-factor
@@ -150,6 +168,9 @@ class BCrypt
      */
     public function hash($password, $userData='', $costFactor=null, $globalSalt=null)
     {
+        $algoId = self::getAlgorithmId();
+        self::checkAlgorithmConstraints($algoId, $password);
+        
         if (is_null($costFactor)) {
             $costFactor = $this->costFactor;
         } else {
@@ -165,7 +186,7 @@ class BCrypt
         $salt = self::makeSalt(self::SALT_LENGTH);
 
         $saltDefinition = sprintf('$%s$%02d$%s',
-           self::getAlgorithmId(), $costFactor, $salt
+           $algoId, $costFactor, $salt
         );
 
         return crypt($string, $saltDefinition);
