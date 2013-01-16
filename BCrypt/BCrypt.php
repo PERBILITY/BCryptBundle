@@ -98,30 +98,30 @@ class BCrypt
      *
      * @return string
      */
-     public static final function getAlgorithmId($version=PHP_VERSION)
-     {
-         return version_compare($version, "5.3.7", ">=")
-             ? self::ALGO_ID
-             : self::ALGO_ID_PRE_5_3_7;
-     }
+    public static final function getAlgorithmId($version=PHP_VERSION)
+    {
+        return version_compare($version, "5.3.7", ">=")
+            ? self::ALGO_ID
+            : self::ALGO_ID_PRE_5_3_7;
+    }
      
-     /**
+    /**
      * Checks for possible constraints of the given algorithm
      *
      * @param string $algoId
      * @param string $password
      * @throws \RuntimeException if using 8-bit password with PHP version <= 5.3.7
      */
-     public static function checkAlgorithmConstraints($algoId, $password)
-     {
-         if (self::ALGO_ID_PRE_5_3_7 === $algoId && preg_match('/[\x80-\xFF]/', $password)) {
-                throw new \RuntimeException(
-                    'The bcrypt implementation used by PHP can contains a security flaw ' .
-                    'using password with 8-bit character. ' .
-                    'We suggest to upgrade to PHP 5.3.7+ or use passwords with only 7-bit characters'
-                );
+    public static function checkAlgorithmConstraints($algoId, $password)
+    {
+        if (self::ALGO_ID_PRE_5_3_7 === $algoId && preg_match('/[\x80-\xFF]/', $password)) {
+            throw new \RuntimeException(
+                'The bcrypt implementation used by PHP can contains a security flaw ' .
+                'using password with 8-bit character. ' .
+                'We suggest to upgrade to PHP 5.3.7+ or use passwords with only 7-bit characters'
+            );
         }
-     }
+    }
 
     /**
      * Gets the bcrypt cost-factor
