@@ -114,7 +114,7 @@ class BCrypt
      */
      public static function checkAlgorithmConstraints($algoId, $password)
      {
-         if (self::ALGO_ID_5_3_7 === $algoId && preg_match('/[\x80-\xFF]/', $password)) {
+         if (self::ALGO_ID PRE_5_3_7 === $algoId && preg_match('/[\x80-\xFF]/', $password)) {
                 throw new \RuntimeException(
                     'The bcrypt implementation used by PHP can contains a security flaw ' .
                     'using password with 8-bit character. ' .
