@@ -14,8 +14,10 @@
     "require": {
         "symfony/framework-bundle": "~2.1",
         "symfony/security-bundle": "~2.1",
-        "symfony/console": "~2.1",
-        "php": ">=5.3"
+        "php": "~5.3"
+    },
+    "require-dev": {
+        "symfony/console": "~2.1"
     },
     "autoload": {
         "psr-0": {
