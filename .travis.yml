@@ -4,7 +4,13 @@ php:
   - 5.3
   - 5.4
 
+env:
+  - S2_VER="2.1.*"
+  - S2_VER="2.2.*"
+
 before_script:
+  - composer require symfony/framework-bundle:${S2_VER}
+  - composer require symfony/security-bundle:${S2_VER}
   - composer install --dev
 
 script: phpunit --coverage-text
