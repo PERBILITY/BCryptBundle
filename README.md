@@ -16,7 +16,7 @@ Installation
 It's recommended to install this bundle (and Symfony2) with [composer](http://getcomposer.org). To install you need to run the following command:
 
 ``` bash
-$ composer require perbility/bcrypt-bundle
+$ composer require perbility/bcrypt-bundle:1.*
 ```
 
 Then update your AppKernel.php file, and register the new bundle:
